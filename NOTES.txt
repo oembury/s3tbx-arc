@@ -4,6 +4,8 @@ ATSR Saharan Dust Index for ATSR1, ATSR2, AATSR
 
 To do:
 
+Sometimes outputs appear corrupted in SNAP - not sure if this is a problem in Java code or just a broken development environment.
+
 Option to use NWP TCWV if data is available. Nadir-view especially will be biased if TCWV is not available.
 Alternatively generate "global" SST coefficients (will be inferior to ARC retrievals and will have to wait for CCI retrieval work)
 
