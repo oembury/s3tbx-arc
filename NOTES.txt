@@ -4,6 +4,11 @@ ATSR Saharan Dust Index for ATSR1, ATSR2, AATSR
 
 To do:
 
+Option to use NWP TCWV if data is available. Nadir-view especially will be biased if TCWV is not available.
+Alternatively generate "global" SST coefficients (will be inferior to ARC retrievals and will have to wait for CCI retrieval work)
+
+Output uncertainty information, will require L1b uncertainty information expected in SLSTR L1b and future versions of ATSR L1b (also requires NWP TCWV as input)
+
 Update AATSR coefficients to account for different treatment of AATSR 12 micron anomaly (current coefficients assume the input L1b data has been adjusted as was the case with ARC processing, future CCI coefficients will work directly with current L1b)
 
 Option to return all 4 ARC SSTs - so that "day" (e.g. d2) and "night" (e.g. d3) can be directly compared on night-time conditions where both retrievals work
