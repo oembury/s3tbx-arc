@@ -1,0 +1,21 @@
+Implements:
+ARC SST retrievals (n2, n3, d2, d3) for ATSR1, ATSR2, AATSR
+ATSR Saharan Dust Index for ATSR1, ATSR2, AATSR
+
+To do:
+
+Option to return all 4 ARC SSTs - so that "day" (e.g. d2) and "night" (e.g. d3) can be directly compared on night-time conditions where both retrievals work
+
+Option to return standard dual and nadir retrievals - i.e. n2/d2 for day and twilight (twilight threshold should be controlled by UI)
+
+Should we include an option to filter data based on ASDI or dual-nadir difference (this would be easy to do in SNAP after processing so maybe we shouldn't include it in the ARC processor)
+
+Automatically detect the sensor (atsr1 / atsr2 / aatsr / slstr) from the input product and select appropriate coefficient files.
+
+Merge 4 ARC retrievals (n2,n3,d2,d3) into single coef file as done with original ARC files
+
+Write coeffient reader compatible with original ARC files rather than converting ARC files to Java property format?
+
+Update documentation
+
+Update / restore tests
