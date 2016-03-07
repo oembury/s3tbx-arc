@@ -4,6 +4,8 @@ ATSR Saharan Dust Index for ATSR1, ATSR2, AATSR
 
 To do:
 
+Update AATSR coefficients to account for different treatment of AATSR 12 micron anomaly (current coefficients assume the input L1b data has been adjusted as was the case with ARC processing, future CCI coefficients will work directly with current L1b)
+
 Option to return all 4 ARC SSTs - so that "day" (e.g. d2) and "night" (e.g. d3) can be directly compared on night-time conditions where both retrievals work
 
 Option to return standard dual and nadir retrievals - i.e. n2/d2 for day and twilight (twilight threshold should be controlled by UI)
