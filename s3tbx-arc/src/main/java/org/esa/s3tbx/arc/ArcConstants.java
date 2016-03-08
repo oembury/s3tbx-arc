@@ -42,4 +42,8 @@ class ArcConstants {
     public static final String OUT_BAND_UNIT = "K";
     public static final String OUT_BAND_NADIR_DESCRIPTION = "Nadir-view sea surface temperature";
     public static final String OUT_BAND_DUAL_DESCRIPTION = "Combined view sea surface temperature";
+    public static final String PROCESS_ASDI_LABELTEXT = "Generate ASDI";
+    public static final String PROCESS_ASDI_DESCRIPTION = "Enables/disables generation of ATSR Saharan Dust Index";
+    public static final String DEFAULT_ASDI_BITMASK = "!cloud_flags_nadir.LAND";
+    public static final String ASDI_COEFF_FILE_DESCRIPTION = "Coefficient file for ASDI";
 }

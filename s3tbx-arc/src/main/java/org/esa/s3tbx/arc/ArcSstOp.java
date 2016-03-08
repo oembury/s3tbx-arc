@@ -105,31 +105,45 @@ public class ArcSstOp extends PixelOperator {
     private Product sourceProduct;
 
     @Parameter(defaultValue = "true",
-               label = ArcConstants.PROCESS_DUAL_VIEW_SST_LABELTEXT,
-               description = ArcConstants.PROCESS_DUAL_VIEW_SST_DESCRIPTION)
-    private boolean dual;
+               label = ArcConstants.PROCESS_ASDI_LABELTEXT,
+               description = ArcConstants.PROCESS_ASDI_DESCRIPTION)
+    private boolean asdi;
 
-    @Parameter(defaultValue = "ASDI_AATSR", label = "Dual-view coefficient file",
-               description = ArcConstants.DUAL_VIEW_COEFF_FILE_DESCRIPTION,
+    @Parameter(defaultValue = "ASDI_AATSR", label = "ASDI coefficient file",
+               description = ArcConstants.ASDI_COEFF_FILE_DESCRIPTION,
                valueSet = {
                        "ASDI_ATSR1", "ASDI_ATSR2", "ASDI_AATSR",
-                       "ARC_D2_ATSR1", "ARC_D2_ATSR2", "ARC_D2_AATSR",
-                       "ARC_D3_ATSR1", "ARC_D3_ATSR2", "ARC_D3_AATSR"
                })
+    private Files asdiCoefficientsFile;
+
+    @Parameter(defaultValue = ArcConstants.DEFAULT_ASDI_BITMASK, label = "ASDI mask",
+               description = "ROI-mask used for the ASDI")
+    private String asdiMaskExpression;
+
+    @Parameter(defaultValue = "true",
+            label = ArcConstants.PROCESS_DUAL_VIEW_SST_LABELTEXT,
+            description = ArcConstants.PROCESS_DUAL_VIEW_SST_DESCRIPTION)
+    private boolean dual;
+
+    @Parameter(defaultValue = "ARC_D2_AATSR", label = "Dual-view coefficient file",
+            description = ArcConstants.DUAL_VIEW_COEFF_FILE_DESCRIPTION,
+            valueSet = {
+                    "ARC_D2_ATSR1", "ARC_D2_ATSR2", "ARC_D2_AATSR",
+                    "ARC_D3_ATSR1", "ARC_D3_ATSR2", "ARC_D3_AATSR"
+            })
     private Files dualCoefficientsFile;
 
     @Parameter(defaultValue = ArcConstants.DEFAULT_DUAL_VIEW_BITMASK, label = "Dual-view mask",
-               description = "ROI-mask used for the dual-view SST")  // todo - use ExpressionEditor
+            description = "ROI-mask used for the dual-view SST")  // todo - use ExpressionEditor
     private String dualMaskExpression;
 
     @Parameter(defaultValue = "true", label = ArcConstants.PROCESS_NADIR_VIEW_SST_LABELTEXT,
                description = ArcConstants.PROCESS_NADIR_VIEW_SST_DESCRIPTION)
     private boolean nadir;
 
-    @Parameter(defaultValue = "ASDI_AATSR", label = "Nadir-view coefficient file",
+    @Parameter(defaultValue = "ARC_N2_AATSR", label = "Nadir-view coefficient file",
                description = ArcConstants.NADIR_VIEW_COEFF_FILE_DESCRIPTION,
                valueSet = {
-                       "ASDI_ATSR1", "ASDI_ATSR2", "ASDI_AATSR",
                        "ARC_N2_ATSR1", "ARC_N2_ATSR2", "ARC_N2_AATSR",
                        "ARC_N3_ATSR1", "ARC_N3_ATSR2", "ARC_N3_AATSR"
                })
@@ -145,12 +159,14 @@ public class ArcSstOp extends PixelOperator {
 
     private transient ArcCoefficients coeff1;
     private transient ArcCoefficients coeff2;
+    private transient ArcCoefficients coeff3;
 
     private transient int[] nadirCoefficientIndexes;
     private transient int[] dualCoefficientIndexes;
 
     private transient int nadirMaskIndex;
     private transient int dualMaskIndex;
+    private transient int asdiMaskIndex;
 
     private transient int currentPixel = 0;
 
@@ -194,6 +210,17 @@ public class ArcSstOp extends PixelOperator {
                 targetSamples[1].set(invalidSstValue);
             }
         }
+        if (asdi) {
+            if (asdiMaskIndex >= 0 && sourceSamples[asdiMaskIndex].getBoolean()) {
+                final double coeff[] = coeff3.get_Coeffs().getValues(wvband, secfwd, secnad);
+                final double asdi = coeff[0] * ir37N + coeff[1] * ir11N + coeff[2] * ir12N +
+                        coeff[3] * ir37F + coeff[4] * ir11F + coeff[5] * ir12F +
+                        coeff[6];
+                targetSamples[2].set(asdi);
+            } else {
+                targetSamples[2].set(invalidSstValue);
+            }
+        }
     }
 
     private void checkCancellation() {
@@ -228,6 +255,11 @@ public class ArcSstOp extends PixelOperator {
             dualMaskIndex = 11;
             sc.defineComputedSample(dualMaskIndex, ProductData.TYPE_UINT8, dualMaskExpression);
         }
+        asdiMaskIndex = -1;
+        if (asdiMaskExpression != null && !asdiMaskExpression.trim().isEmpty()) {
+            asdiMaskIndex = 12;
+            sc.defineComputedSample(asdiMaskIndex, ProductData.TYPE_UINT8, asdiMaskExpression);
+        }
     }
 
     @Override
@@ -237,6 +269,9 @@ public class ArcSstOp extends PixelOperator {
         }
         if (dual) {
             sc.defineSample(1, coeff2.getName());
+        }
+        if (asdi) {
+            sc.defineSample(2, coeff3.getName());
         }
     }
 
@@ -258,6 +293,13 @@ public class ArcSstOp extends PixelOperator {
             dualSstBand.setGeophysicalNoDataValue(invalidSstValue);
             dualSstBand.setNoDataValueUsed(true);
         }
+        if (asdi) {
+            final Band asdiBand = productConfigurer.addBand(coeff3.getName(), ProductData.TYPE_FLOAT32);
+            asdiBand.setUnit(ArcConstants.OUT_BAND_UNIT);
+            asdiBand.setDescription(coeff3.getDescription());
+            asdiBand.setGeophysicalNoDataValue(invalidSstValue);
+            asdiBand.setNoDataValueUsed(true);
+        }
    }
 
     @Override
@@ -265,17 +307,16 @@ public class ArcSstOp extends PixelOperator {
         super.prepareInputs();
 
         final File auxdataDir = installAuxiliaryData();
-        if (nadir) {
-            initNadirCoefficients(auxdataDir);
-        }
+        initNadirCoefficients(auxdataDir);
     }
 
 
     private void initNadirCoefficients(File auxdataDir) throws OperatorException {
         final ArcCoefficientLoader loader = new ArcCoefficientLoader();
         try {
-            coeff1 = loader.load(nadirCoefficientsFile.getURL(auxdataDir));
-            coeff2 = loader.load(dualCoefficientsFile.getURL(auxdataDir));
+            if (nadir) coeff1 = loader.load(nadirCoefficientsFile.getURL(auxdataDir));
+            if (dual) coeff2 = loader.load(dualCoefficientsFile.getURL(auxdataDir));
+            if (asdi) coeff3 = loader.load(asdiCoefficientsFile.getURL(auxdataDir));
         } catch (IOException e) {
             throw new OperatorException(e);
         }
