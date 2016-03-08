@@ -46,13 +46,11 @@ import java.nio.file.Path;
  * An operator for computing sea surface temperature from (A)ATSR products.
  *
  * @author Owen Embury
- * @author Tom Block
- * @author Ralf Quast
  */
 @OperatorMetadata(alias = "Arc.SST",
                   category = "Optical/Thematic Water Processing",
-                  authors = "Owen Embury, Tom Block, Ralf Quast",
-                  copyright = "Brockmann Consult GmbH",
+                  authors = "Owen Embury",
+                  copyright = "University of Reading, Brockmann Consult GmbH",
                   version = "0.1",
                   description = "Computes sea surface temperature (SST) from (A)ATSR products.")
 public class ArcSstOp extends PixelOperator {
