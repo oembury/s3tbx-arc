@@ -32,7 +32,6 @@ import org.esa.snap.core.gpf.pointop.TargetSampleConfigurer;
 import org.esa.snap.core.gpf.pointop.WritableSample;
 import org.esa.snap.core.util.ResourceInstaller;
 import org.esa.snap.core.util.SystemUtils;
-import org.esa.snap.core.util.math.VectorLookupTable;
 
 import javax.media.jai.OpImage;
 import java.awt.image.Raster;
