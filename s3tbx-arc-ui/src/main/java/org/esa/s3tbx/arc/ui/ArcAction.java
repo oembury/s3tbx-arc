@@ -27,15 +27,9 @@ import org.openide.util.NbBundle;
 
 import java.awt.event.ActionEvent;
 
-@ActionID(
-        category = "Processing",
-        id = "org.esa.snap.arc.ui.ArcAction"
-)
+@ActionID(category = "Processing", id = "org.esa.snap.arc.ui.ArcAction" )
 @ActionRegistration(displayName = "#CTL_ArcActionText")
-@ActionReference(
-        path = "Menu/Optical/Thematic Water Processing",
-        position = 200
-)
+@ActionReference(path = "Menu/Optical/Thematic Water Processing", position = 110 )
 @NbBundle.Messages({"CTL_ArcActionText=ARC SST Processor"})
 public class ArcAction extends AbstractSnapAction {
 
