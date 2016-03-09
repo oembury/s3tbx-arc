@@ -104,6 +104,11 @@ public class ArcSstOp extends PixelOperator {
                    })
     private Product sourceProduct;
 
+    @Parameter(defaultValue = "30.0f", label = "Total Column Water Vapour",
+               description = "TCWV value to use in SST retrieval",
+               interval="[0,65]")
+    private float nwpTCWV;
+
     @Parameter(defaultValue = "true",
                label = ArcConstants.PROCESS_ASDI_LABELTEXT,
                description = ArcConstants.PROCESS_ASDI_DESCRIPTION)
@@ -175,7 +180,6 @@ public class ArcSstOp extends PixelOperator {
         checkCancellation();
         final double secnad = 1.0 / Math.cos(Math.toRadians(90-sourceSamples[8].getFloat()));
         final double secfwd = 1.0 / Math.cos(Math.toRadians(90-sourceSamples[9].getFloat()));
-        final double wvband = 30.0;
 
         final float ir37N = sourceSamples[0].getFloat();
         final float ir11N = sourceSamples[1].getFloat();
@@ -188,7 +192,7 @@ public class ArcSstOp extends PixelOperator {
 
         if (nadir) {
             if (nadirMaskIndex >= 0 && sourceSamples[nadirMaskIndex].getBoolean()) {
-                final double coeff[] = coeff1.get_Coeffs().getValues(wvband, secfwd, secnad);
+                final double coeff[] = coeff1.get_Coeffs().getValues(nwpTCWV, secfwd, secnad);
                 final double nadirSst = coeff[0]*ir37N + coeff[1]*ir11N + coeff[2]*ir12N +
                                        coeff[3]*ir37F + coeff[4]*ir11F + coeff[5]*ir12F +
                                        coeff[6];
@@ -200,7 +204,7 @@ public class ArcSstOp extends PixelOperator {
         }
         if (dual) {
             if (dualMaskIndex >= 0 && sourceSamples[dualMaskIndex].getBoolean()) {
-                final double coeff[] = coeff2.get_Coeffs().getValues(wvband, secfwd, secnad);
+                final double coeff[] = coeff2.get_Coeffs().getValues(nwpTCWV, secfwd, secnad);
                 final double dualSst = coeff[0]*ir37N + coeff[1]*ir11N + coeff[2]*ir12N +
                                        coeff[3]*ir37F + coeff[4]*ir11F + coeff[5]*ir12F +
                                        coeff[6];
@@ -212,7 +216,7 @@ public class ArcSstOp extends PixelOperator {
         }
         if (asdi) {
             if (asdiMaskIndex >= 0 && sourceSamples[asdiMaskIndex].getBoolean()) {
-                final double coeff[] = coeff3.get_Coeffs().getValues(wvband, secfwd, secnad);
+                final double coeff[] = coeff3.get_Coeffs().getValues(nwpTCWV, secfwd, secnad);
                 final double asdi = coeff[0] * ir37N + coeff[1] * ir11N + coeff[2] * ir12N +
                         coeff[3] * ir37F + coeff[4] * ir11F + coeff[5] * ir12F +
                         coeff[6];
