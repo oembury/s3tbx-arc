@@ -55,9 +55,6 @@ import java.nio.file.Path;
                   description = "Computes sea surface temperature (SST) from (A)ATSR products.")
 public class ArcSstOp extends PixelOperator {
 
-    private static final String NADIR_SST_BAND_NAME = "nadir_sst";
-    private static final String DUAL_SST_BAND_NAME = "dual_sst";
-
     @SuppressWarnings("unused")
     private enum Files {
         ASDI_AATSR("AATSR ASDI coeffs", "ASDI_AATSR.coef"),
@@ -284,27 +281,23 @@ public class ArcSstOp extends PixelOperator {
         super.configureTargetProduct(productConfigurer);
 
         if (nadir) {
-            final Band nadirSstBand = productConfigurer.addBand(coeff1.getName(), ProductData.TYPE_FLOAT32);
-            nadirSstBand.setUnit(ArcConstants.OUT_BAND_UNIT);
-            nadirSstBand.setDescription(coeff1.getDescription());
-            nadirSstBand.setGeophysicalNoDataValue(invalidSstValue);
-            nadirSstBand.setNoDataValueUsed(true);
+            createBand(productConfigurer, coeff1);
         }
         if (dual) {
-            final Band dualSstBand = productConfigurer.addBand(coeff2.getName(), ProductData.TYPE_FLOAT32);
-            dualSstBand.setUnit(ArcConstants.OUT_BAND_UNIT);
-            dualSstBand.setDescription(coeff2.getDescription());
-            dualSstBand.setGeophysicalNoDataValue(invalidSstValue);
-            dualSstBand.setNoDataValueUsed(true);
+            createBand(productConfigurer, coeff2);
         }
         if (asdi) {
-            final Band asdiBand = productConfigurer.addBand(coeff3.getName(), ProductData.TYPE_FLOAT32);
-            asdiBand.setUnit(ArcConstants.OUT_BAND_UNIT);
-            asdiBand.setDescription(coeff3.getDescription());
-            asdiBand.setGeophysicalNoDataValue(invalidSstValue);
-            asdiBand.setNoDataValueUsed(true);
+            createBand(productConfigurer, coeff3);
         }
    }
+
+    private void createBand(ProductConfigurer productConfigurer, ArcCoefficients coeff) {
+        final Band nadirSstBand = productConfigurer.addBand(coeff.getName(), ProductData.TYPE_FLOAT32);
+        nadirSstBand.setUnit(ArcConstants.OUT_BAND_UNIT);
+        nadirSstBand.setDescription(coeff.getDescription());
+        nadirSstBand.setGeophysicalNoDataValue(invalidSstValue);
+        nadirSstBand.setNoDataValueUsed(true);
+    }
 
     @Override
     protected void prepareInputs() throws OperatorException {
