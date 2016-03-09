@@ -16,7 +16,7 @@
 
 <html>
 <head>
-    <title>SNAP Data Processors - Creating new SST coefficient files</title>
+    <title>SNAP Data Processors - Creating new ARC coefficient files</title>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" href="../style.css">
 </head>
@@ -34,18 +34,11 @@
 </table>
 
 <p>
-    The SNAP SST Tool uses coefficient files during the SST processing to read its coefficient sets.<br>
+    The ARC SST Tool uses coefficient files during the SST and ASDI processing.<br>
     These files are located in:</p>
 <blockquote>
-    <code>&lt;S3TBX-HOME&gt;/auxdata/sst/dual_view</code>
+    <code>&lt;S3TBX-HOME&gt;/auxdata/arc</code>
 </blockquote>
-
-<p>or</p>
-<blockquote>
-    <code>&lt;S3TBX-HOME&gt;/auxdata/sst/nadir_view</code>
-</blockquote>
-
-<p>each for the specified view.</p>
 
 <p>
     A coefficient file is a standard java properties file consisting of key/value
@@ -60,99 +53,98 @@
 </p>
 
 <p>
-    Each coefficient file should contain a short description, denoted as:
+    Each coefficient file should contain a band name and short description, denoted as:
 </p>
 
-<pre><code> description = my coefficient description</code></pre>
+<pre><code> name = short_name<br> description = my coefficient description</code></pre>
 
 <p>
     The description string is shown in the user interface coefficient selection box.
 </p>
 
 <p>
-    The coefficient file can contain any number of so called map keys. These keys define
-    a pixel range across the scanline where a specific set of coefficients shall be used.
-    Map keys contain successive numbers to allow the coefficient to be associated to a
-    specific range. Each map value consists of two integer values defining the lower and
-    higher bound of the range (borders are included).
+    The coefficient file defines a multi-dimensional lookup table of linear retrieval
+    coefficients to use at specified viewing geometry (nadir and forward view path
+    length) and TCWV values. It is necessary to specify the full set of coefficients at
+    at-least two points along each axis. For cases where the coefficients do not vary
+    with a particular parameter such as the ASDI coefficients the coefficients should
+    simply be repeated to indicate that the coefficients do not vary along that axis.
+</p>
+
+<p>
+    The three axis for the lookup table are: nadir path length, forward path length, TCWV.
 </p>
 
 <p style="margin-bottom:3;">Example:</p>
 <ul style="margin-top:3;">
-    map.0=0,123<br>
-    map.1=124,325<br>
-    map.2=326,511
+    secnad = 1, 1.0743021
+    secfwd = 0, 1
+    wvband = 0, 1
 </ul>
 
 <p>
-    devides each scanline into three non-overlapping pixel ranges.
-    The coefficient file parser checks the map ranges for overlaps or gaps and
-    notifies the user on this.
+    indicates that coefficients will be specified at nadir path lengths of 1 and 1.07
+    (the centre and edge of the ATSR nadir-view), forward-view path lengths of 0 and 1
+    (these are unphysical values used for a coefficient set which does not vary with
+    forward-view path length), and TCWV values of 0 and 1 (again this set of coefficients
+    does not depend on TCWV)
 </p>
 
 <p>
-    For every map range there must be a corresponding set of coefficients.
-    Coefficient keys follow the same rules as map keys, they contain consecutive numbers
-    to be associated with map ranges. Valid coefficient names are – following the standard
-    sst algorithm conventions – a.x through d.x. All coefficient files stored in the
-    nadir view directory are expected to have just a and b coefficient sets and files in
-    the dual view directory just c and d coefficients.
+    For every combination of lookup parameters there must be a corresponding set of
+    coefficients. The example above specifies the smallest possibly lookup table:
+    2x2x2 with a total of 8 coefficients required. The coefficients are specified in
+    standard array order, with secnad the fastest varying axis, then secfwd, and wvband
+    the slowest varying axis.
 </p>
 
 <p>
-    For each map range with index x there must be a set of coefficients (a.x and b.x or
-    c.x and d.x) available. Coefficient values consist of a number of comma separated
-    floating point values.
+    For each combination of lookup parameters there must be a set of 7 coefficients
+    (corresponding to the 3.7n, 11n, 12n, 3.7f, 11f, 12f, and constant terms).
+    Coefficient values consist of a number of comma separated floating point values.
+    It is recommended that 7 values are printed on each line
 </p>
 
 <p style="margin-bottom:3;">Example:</p>
-<ul style="margin-top:3;">
-    <pre style="margin-top:3;">a.1=1.0, 2.0, 3.0
-        c.6=1.0, 2.0, 3.0, 4.0, 5.0</pre>
-</ul>
-
-<p style="margin-bottom:3;">
-    The number of coefficient values is defined by the sst algorithm as follows:
-</p>
-
-<ul style="margin-top:3;">
-    <pre style="margin-top:3;">a.x coefficients contain three values
-        b.x coefficients contain four values
-        c.x coefficients contain five values
-        d.x coefficients contain seven values</pre>
-</ul>
-
-<p>
-    The coefficient file parser checks the number of coefficients and the
-    associations and notifies the user on such errors.
-</p>
-
-<p style="margin-bottom:3;">Here is a valid coefficent file as example:</p>
 <ul style="margin-top:3;">
     <pre style="margin-top:3;">
-        # Source file: ATS_SST_AXVIEC20051205_102103_20020101_000000_20200101_000000.htm
-        # Coefficients taken from record #77 of dataset AVERAGE_LUT which corresponds to
-        # - latitude zone POLAR_INDEX
-        # - across track band index 0 (center pixel)
-        # For more information see http://envisat.esa.int/dataproducts/aatsr/CNTR2-7-1.htm
-        #
-        # This file uses Java property file syntax. It is
-        # composed of lines which are key-value pairs in the form
-        # &lt;key&gt; = &ltvalue&gt;
-        # The supported keys are:
-        # description - a short description of the coefficient set
-        # map.&lt;x&gt; - definition of the coefficient map &ltx&gt; as a
-        # range of zero-based, scanline column indices
-        # &lt;set&gt;.&ltx&gt; - coefficient set corresponding to map.&ltx&gt;
-        # where &ltset&gt; is one of c (day) or d (night).
+        coeffs = 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
+                 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
+                 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
+                 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179
+    </pre>
+</ul>
 
+<p>
+    which are the coefficients for the AATSR ASDI. This set only uses three channels:
+    11 micron nadir, 11 micron forward, and 12 micron forward. The coefficients only
+    depend on the nadir-view path length, with the first two lines specifiying the
+    coefficients at the centre swath (secnad=1) and edge of swath (secnad=1.07). The
+    same coefficients are then repeated a further three times for the unused dimensions
+    (secfwd and wvband).
+</p>
 
-        description = Average Polar Dual View
-
-        # Map 0
-        map.0 = 0, 511
-        c.0 = 4.55397, 5.59769, -3.26962, -3.30387, 1.95733
-        d.0 = 0.952765, 0.437266, -0.653424, 2.61203, -0.229391, 0.357714, -1.5279
+<p style="margin-bottom:3;">Here is a complete coefficent file as example:</p>
+<ul style="margin-top:3;">
+    <pre style="margin-top:3;">
+        # Source file: ASDI_AATSR.coef
+        name = ASDI
+        description = AATSR Saharan Dust Index
+        secnad = 1, 1.0743021
+        secfwd = 0, 1
+        wvband = 0, 1
+        coeffs = 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
+                 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
+                 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
+                 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179
     </pre>
 </ul>
 <hr>
