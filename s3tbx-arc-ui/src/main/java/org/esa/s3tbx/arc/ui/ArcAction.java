@@ -42,11 +42,11 @@ public class ArcAction extends AbstractSnapAction {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        final String title = "ARC SST Processor";
 
         final DefaultSingleTargetProductDialog dialog = new DefaultSingleTargetProductDialog("Arc.SST",
                                                                                              getAppContext(),
-                                                                                             title, HELP_ID);
+                                                                                             Bundle.CTL_ArcActionText(),
+                                                                                             HELP_ID);
         final BindingContext bindingContext = dialog.getBindingContext();
         bindingContext.bindEnabledState("dual", true, "nadir", true);
         bindingContext.bindEnabledState("dualCoefficientsFile", true, "dual", true);
