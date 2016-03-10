@@ -162,9 +162,6 @@ public class ArcSstOp extends PixelOperator {
     private transient ArcCoefficients coeff2;
     private transient ArcCoefficients coeff3;
 
-    private transient int[] nadirCoefficientIndexes;
-    private transient int[] dualCoefficientIndexes;
-
     private transient int nadirMaskIndex;
     private transient int dualMaskIndex;
     private transient int asdiMaskIndex;
