@@ -48,7 +48,7 @@ import java.nio.file.Path;
  */
 @OperatorMetadata(alias = "Arc.SST",
                   category = "Optical/Thematic Water Processing",
-                  authors = "Owen Embury",
+                  authors = "Owen Embury, Marco Peters",
                   copyright = "University of Reading, Brockmann Consult GmbH",
                   version = "0.1",
                   description = "Computes sea surface temperature (SST) from (A)ATSR products.")
