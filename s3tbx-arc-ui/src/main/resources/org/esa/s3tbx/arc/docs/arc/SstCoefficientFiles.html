@@ -25,7 +25,7 @@
 <table class="header">
     <tr class="header">
         <td class="header">&nbsp;
-            Creating new coefficient files
+            ARC SST Processor - Creating new coefficient files
         </td>
         <td class="header" align="right"><a href="nbdocs://org.esa.snap.snap.help/org/esa/snap/snap/help/docs/general/overview/SnapOverview.html"><img src="../images/snap_header.jpg"
                                                                                      border=0></a>
@@ -56,7 +56,10 @@
     Each coefficient file should contain a band name and short description, denoted as:
 </p>
 
-<pre><code> name = short_name<br> description = my coefficient description</code></pre>
+<pre>
+    name = short_name
+    description = my coefficient description
+</pre>
 
 <p>
     The description string is shown in the user interface coefficient selection box.
@@ -75,12 +78,12 @@
     The three axis for the lookup table are: nadir path length, forward path length, TCWV.
 </p>
 
-<p style="margin-bottom:3;">Example:</p>
-<ul style="margin-top:3;">
+<p>Example:
+<pre>
     secnad = 1, 1.0743021
     secfwd = 0, 1
     wvband = 0, 1
-</ul>
+</pre>
 
 <p>
     indicates that coefficients will be specified at nadir path lengths of 1 and 1.07
@@ -105,19 +108,17 @@
     It is recommended that 7 values are printed on each line
 </p>
 
-<p style="margin-bottom:3;">Example:</p>
-<ul style="margin-top:3;">
-    <pre style="margin-top:3;">
-        coeffs = 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
-                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
-                 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
-                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
-                 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
-                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
-                 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
-                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179
-    </pre>
-</ul>
+<p>Example:
+<pre>
+    coeffs = 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+             0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
+             0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+             0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
+             0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+             0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
+             0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+             0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179
+</pre>
 
 <p>
     which are the coefficients for the AATSR ASDI. This set only uses three channels:
@@ -128,25 +129,24 @@
     (secfwd and wvband).
 </p>
 
-<p style="margin-bottom:3;">Here is a complete coefficent file as example:</p>
-<ul style="margin-top:3;">
-    <pre style="margin-top:3;">
-        # Source file: ASDI_AATSR.coef
-        name = ASDI
-        description = AATSR Saharan Dust Index
-        secnad = 1, 1.0743021
-        secfwd = 0, 1
-        wvband = 0, 1
-        coeffs = 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
-                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
-                 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
-                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
-                 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
-                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
-                 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
-                 0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179
-    </pre>
-</ul>
+<p>Here is a complete coefficent file as example:
+<pre>
+    # Source file: ASDI_AATSR.coef
+    name = ASDI
+    description = AATSR Saharan Dust Index
+    secnad = 1, 1.0743021
+    secfwd = 0, 1
+    wvband = 0, 1
+    coeffs = 0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+             0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
+             0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+             0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
+             0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+             0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179, \
+             0.0, 0.39602999, 0.0, 0.0,-0.75792998, 0.3619000,-0.01226863, \
+             0.0, 0.34224000, 0.0, 0.0,-0.58267001, 0.2404300,-0.01465179
+</pre>
+
 <hr>
 </body>
 </html>
