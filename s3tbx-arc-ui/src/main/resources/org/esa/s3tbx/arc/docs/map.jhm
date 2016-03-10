@@ -5,9 +5,9 @@
 
 <map version="2.0">
 
-    <mapID target="arcScientificTool" url="arc/SstTool.html"/>
-    <mapID target="arcAlgorithmSpec" url="arc/SstAlgorithmSpecification.html"/>
-    <mapID target="arcProcessorDesc" url="arc/SstProcessorDescription.html"/>
-    <mapID target="arcCoefficientFiles" url="arc/SstCoefficientFiles.html"/>
+    <mapID target="arcScientificTool" url="arc/ArcSstTool.html"/>
+    <mapID target="arcAlgorithmSpec" url="arc/ArcSstAlgorithmSpecification.html"/>
+    <mapID target="arcProcessorDesc" url="arc/ArcSstProcessorDescription.html"/>
+    <mapID target="arcCoefficientFiles" url="arc/ArcSstCoefficientFiles.html"/>
 
 </map>
